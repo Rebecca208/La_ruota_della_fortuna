@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class Ruota {
     private List<String> ruota;
@@ -28,4 +29,15 @@ public class Ruota {
         return ruota.get(nRandom);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Ruota ruota1 = (Ruota) o;
+        return Objects.equals(ruota, ruota1.ruota);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(ruota);
+    }
 }

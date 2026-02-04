@@ -8,4 +8,16 @@ public class Giocatore {
         this.nome = nome;
         this.manche = 0;
     }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setSalvadanaio(int salvadanaio) {
+        this.salvadanaio = salvadanaio;
+    }
+
+    public void setManche(int manche) {
+        this.manche = manche;
+    }
 }
