@@ -1,41 +1,75 @@
 import org.json.JSONArray;
-import org.json.JSONObject;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-void main() throws IOException {
-    JSONArray arr = new JSONArray(Files.readString(Path.of("input.json")));
-    var ruota = new Ruota();
-    var Giocatori = new ListaGiocatori();
+public class Main {
+    public static void main(String[] args) {
+        try {
+            String inputPath = "input.json";
+            if (!Files.exists(Path.of(inputPath))) {
+                System.out.println("File 'input.json' non trovato nella cartella del progetto. Creane uno di esempio o copia l'input richiesto.");
+                return;
+            }
 
-//    for(int i = 0; i < 3; i++) {
-//        System.out.println("Inserisci il nome del " + i + "° giocatore");
-//        Scanner input = new Scanner(System.in);
-//        Giocatori.addGiocatore(input.nextLine());
-//    }
-    for (var i = 0; i < 3; i++) {
-        Giocatori.addGiocatore("Rebecca" + i);
-    }
+            JSONArray arr = new JSONArray(Files.readString(Path.of(inputPath)));
+            var ruota = new Ruota();
+            var Giocatori = new ListaGiocatori();
+            var MANCHE = 1;
 
-    for (int i = 0; i < 5; i++) {
-        System.out.println("Manche " + i);
-        int nRandom = (int) (Math.random() * (arr.length()));
-        var obj = arr.getJSONObject(nRandom);
-        var tb = new Tabellone(obj.getString("frase"), obj.getString("argomento"));
-        System.out.println(tb.getFraseSegreta());
-        System.out.println("Argomento: " + tb.getArg());
+            Giocatori.addGiocatore("Rebecca");
+            Giocatori.addGiocatore("Gabriele");
+            Giocatori.addGiocatore("Luca");
 
-        var Giocatore1 = Giocatori.getGiocatore(1);
-        var ruotaSpicchio = ruota.gira();
-        System.out.println(ruotaSpicchio);
-        if (ruotaSpicchio.equals("Passa")){
-            //Prossimo Giocatore
-        } else if (ruotaSpicchio.equals("Bancarotta")){
-            Giocatore1.setManche(0);
-            Giocatore1.setSalvadanaio(0);
-        } else {
-            Giocatore1.setManche(Integer.parseInt(ruotaSpicchio));
+
+
+            for (int i = 0; i < MANCHE; i++) {
+                //random
+                int randomIndex = (int) (Math.random() * arr.length());
+                var tabellone = new Tabellone(arr.getJSONObject(randomIndex).getString("frase"), arr.getJSONObject(randomIndex).getString("argomento"));
+                System.out.println("Frase segreta: " + tabellone.getFraseSegreta());
+                System.out.println("Argomento: " + arr.getJSONObject(randomIndex).getString("argomento"));
+
+                while (!tabellone.fraseIndovinata()){
+                    for (int j = 0; j < Giocatori.Giocatori.size(); j++) {
+                        var giocatore = Giocatori.getGiocatore(j);
+                        System.out.println("Tocca a " + giocatore.getNome());
+                        String risultatoGiro = ruota.gira();
+                        System.out.println("Ruota: " + risultatoGiro);
+
+                        if (risultatoGiro.equals("Passa")) {
+                            System.out.println(giocatore.getNome() + " ha passato il turno.");
+                        } else if (risultatoGiro.equals("Bancarotta")) {
+                            System.out.println(giocatore.getNome() + " ha perso tutto!");
+                            giocatore.setSalvadanaio(0);
+                        } else {
+                            int valore = Integer.parseInt(risultatoGiro);
+                            System.out.println("Chiama una lettera:");
+                            char lettera = ConsoleUtils.readCharFromConsole();
+                            if ((lettera == 'a' || lettera == 'e' || lettera == 'i' || lettera == 'o' || lettera == 'u') && giocatore.getManche() >= 200) {
+                                tabellone.callLetter(lettera);
+                                giocatore.setManche(giocatore.getManche() - 200);
+                                if (tabellone.contaLettereTrovate(lettera) != 0) {
+                                    j--;
+                                }
+                            } else if ((lettera == 'a' || lettera == 'e' || lettera == 'i' || lettera == 'o' || lettera == 'u') && giocatore.getManche() < 200){
+                                System.out.println("Non hai abbastanza soldi per chiamare una vocale. Scegli una consonante cretino.");
+                            } else {
+                                tabellone.callLetter(lettera);
+                                System.out.println("Lettere trovate: " + tabellone.contaLettereTrovate(lettera));
+                                giocatore.setManche(giocatore.getManche() + valore * tabellone.contaLettereTrovate(lettera));
+                                if (tabellone.contaLettereTrovate(lettera) != 0) {
+                                    j--;
+                                }
+                            }
+                            System.out.println("Frase segreta: " + tabellone.getFraseSegreta());
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Errore lettura file: " + e.getMessage());
         }
     }
 }

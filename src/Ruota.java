@@ -5,6 +5,7 @@ import java.util.Objects;
 
 public class Ruota {
     private List<String> ruota;
+    private int Spicchio;
 
     public Ruota() {
         ruota = new ArrayList<>();
@@ -25,7 +26,7 @@ public class Ruota {
     }
 
     public String gira(){
-        int nRandom = (int) (Math.random() * (ruota.size() + 1));
+        int nRandom = (int) (Math.random() * ruota.size());
         return ruota.get(nRandom);
     }
 
@@ -39,5 +40,13 @@ public class Ruota {
     @Override
     public int hashCode() {
         return Objects.hashCode(ruota);
+    }
+
+    public int getSpicchio() {
+        return Spicchio;
+    }
+
+    public void setSpicchio(int spicchio) {
+        Spicchio = spicchio;
     }
 }

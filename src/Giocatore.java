@@ -20,4 +20,12 @@ public class Giocatore {
     public void setManche(int manche) {
         this.manche = manche;
     }
+
+    public int getSalvadanaio() {
+        return salvadanaio;
+    }
+
+    public int getManche() {
+        return manche;
+    }
 }

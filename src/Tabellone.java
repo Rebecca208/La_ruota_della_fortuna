@@ -58,6 +58,27 @@ public class Tabellone {
                 if (Character.toUpperCase(frase.charAt(i)) == Character.toUpperCase(lettera)) {
                     FraseSegreta.get(posizioneParola).set(posizioneNellaParola, true);
                 }
+                switch (lettera){
+                    case 'a' -> {
+                        callLetter('à');
+                    }
+                    case 'e' -> {
+                        callLetter('é');
+                        callLetter('è');
+                    }
+                    case 'i' -> {
+                        callLetter('ì');
+                    }
+                    case 'o' -> {
+                        callLetter('ò');
+                        callLetter('ó');
+                    }
+                    case 'u' -> {
+                        callLetter('ù');
+                    }
+                    default -> {
+                    }
+                }
                 posizioneNellaParola++;
             }
         }
@@ -85,5 +106,28 @@ public class Tabellone {
 
     public void setArg(String arg) {
         this.arg = arg;
+    }
+
+    public boolean fraseIndovinata(){
+        for (int i = 0; i < FraseSegreta.size(); i++){
+            for (int j = 0; j < FraseSegreta.get(i).size(); j++){
+                if (!FraseSegreta.get(i).get(j)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public int contaLettereTrovate(char lettera) {
+        int count = 0;
+        for (int i = 0; i < FraseSegreta.size(); i++) {
+            for (int j = 0; j < FraseSegreta.get(i).size(); j++) {
+                if (FraseSegreta.get(i).get(j) && Character.toUpperCase(charAtIndex(j, i)) == Character.toUpperCase(lettera)) {
+                    count++;
+                }
+            }
+        }
+        return count;
     }
 }
