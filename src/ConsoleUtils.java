@@ -22,5 +22,14 @@ public class ConsoleUtils {
             return line.charAt(0);
         }
     }
+
+    public static boolean isVocale(char lettera){
+        lettera = Character.toUpperCase(lettera);
+        if ((lettera == 'A' || lettera == 'E' || lettera == 'I' || lettera == 'O' || lettera == 'U')) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
 

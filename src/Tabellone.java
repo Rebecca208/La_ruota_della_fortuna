@@ -1,13 +1,16 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Tabellone {
     private String frase;
     private String arg;
+    private static String FraseDaIndovinare;
     private List<List<Boolean>> FraseSegreta;
 
     public Tabellone(String frase, String arg) {
         this.frase = frase;
+        this.FraseDaIndovinare = frase;
         this.arg = arg;
         List<String> parti = List.of(frase.split(" "));
         FraseSegreta = new ArrayList<>();
@@ -18,6 +21,27 @@ public class Tabellone {
                 FraseSegreta.get(i).add(false);
             }
         }
+    }
+
+    public static boolean IgnoreCaseEquals(String fraseIndovinata) {
+        fraseIndovinata.equalsIgnoreCase(fraseIndovinata);
+        return true;
+    }
+
+    public static String getFraseDaIndovinare() {
+        return FraseDaIndovinare;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Tabellone tabellone = (Tabellone) o;
+        return Objects.equals(FraseDaIndovinare, tabellone.FraseDaIndovinare);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(FraseDaIndovinare);
     }
 
     public String getFraseSegreta() {
