@@ -23,9 +23,8 @@ public class Tabellone {
         }
     }
 
-    public static boolean IgnoreCaseEquals(String fraseIndovinata) {
-        fraseIndovinata.equalsIgnoreCase(fraseIndovinata);
-        return true;
+    public boolean IgnoreCaseEquals(String fraseIndovinata) {
+        return this.frase.equalsIgnoreCase(fraseIndovinata);
     }
 
     public static String getFraseDaIndovinare() {

@@ -1,5 +1,6 @@
 import org.json.JSONArray;
 
+import javax.print.attribute.standard.PrinterMoreInfoManufacturer;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,7 +20,7 @@ public class Main {
             JSONArray arr = new JSONArray(Files.readString(Path.of(inputPath)));
             var ruota = new Ruota();
             var Giocatori = new ListaGiocatori();
-            var MANCHE = 1;
+            var MANCHE = 3;
 
             Giocatori.addGiocatore("Rebecca");
             Giocatori.addGiocatore("Andrea");
@@ -28,17 +29,14 @@ public class Main {
 
 
             for (int i = 0; i < MANCHE; i++) {
-                //random
-                int randomIndex = (int) (Math.random() * arr.length());
-                var tabellone = new Tabellone(arr.getJSONObject(randomIndex).getString("frase"), arr.getJSONObject(randomIndex).getString("argomento"));
-                while (!tabellone.fraseIndovinata()){
-                    System.out.println(Tabellone.getFraseDaIndovinare());
-                    System.out.println("Frase segreta: " + tabellone.getFraseSegreta());
-                    System.out.println("Argomento: " + arr.getJSONObject(randomIndex).getString("argomento"));
+                boolean tabelloneIndovinato = false;
+              while (!tabelloneIndovinato){
+                  int randomIndex = (int) (Math.random() * arr.length());
+                  var tabellone = new Tabellone(arr.getJSONObject(randomIndex).getString("frase"), arr.getJSONObject(randomIndex).getString("argomento"));
                     for (int j = 0; j < Giocatori.Giocatori.size(); j++) {
                         var giocatore = Giocatori.getGiocatore(j);
-                        System.out.println("Tocca a " + giocatore.getNome());
-                        Menu.menu();
+                        System.out.println("Tocca a " + giocatore.toString());
+                        Menu.menu(tabellone);
                         switch (Menu.scelta) {
                             case 1 -> {
                                 String risultatoGiro = ruota.gira();
@@ -67,19 +65,21 @@ public class Main {
                                         if (tabellone.contaLettereTrovate(lettera) != 0) {
                                             j--;
                                         }
+
                                     }
-                                    System.out.println("Frase segreta: " + tabellone.getFraseSegreta());
                                 }
                             }
                             case 2 -> {
                                 System.out.println("Indovina la frase:");
                                 Scanner scanner = new Scanner(System.in);
                                 String fraseIndovinata = scanner.nextLine();
-                                if (Tabellone.IgnoreCaseEquals(fraseIndovinata)) {
+                                if (tabellone.IgnoreCaseEquals(fraseIndovinata)) {
                                     System.out.println(giocatore.getNome() + " ha indovinato la frase!");
                                     giocatore.setSalvadanaio(giocatore.getSalvadanaio() + giocatore.getManche());
-                                    tabellone.IgnoreCaseEquals(tabellone.getFraseSegreta());
-                                    j = Giocatori.Giocatori.size(); // Esce dal ciclo dei giocatori per passare alla prossima manche
+                                    // Set all letters to true to end the manche
+                                    for (int w = 0; w < Tabellone.getFraseDaIndovinare().length(); w++) {
+                                        tabellone.callLetter(Tabellone.getFraseDaIndovinare().charAt(w));
+                                    }
                                 } else {
                                     System.out.println("Frase errata!");
                                 }
@@ -88,6 +88,9 @@ public class Main {
                                 System.out.println("Scelta non valida. Riprova.");
                                 j--;
                             }
+                        }
+                        if (tabellone.fraseIndovinata()) {
+                            break;
                         }
                     }
                 }

@@ -28,4 +28,11 @@ public class Giocatore {
     public int getManche() {
         return manche;
     }
+
+    @Override
+    public String toString() {
+        return nome +
+                ": salvadanaio=" + salvadanaio +
+                " manche=" + manche;
+    }
 }
