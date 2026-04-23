@@ -7,7 +7,6 @@ public class Menu {
 
     public static int menu(Tabellone tb) {
         while (true) {
-            System.out.println(Tabellone.getFraseDaIndovinare());
             System.out.println("Frase segreta: " + tb.getFraseSegreta());
             System.out.println("Argomento: " + tb.getArg());
             System.out.println("Il tuo turno!");
